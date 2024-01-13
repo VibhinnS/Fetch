@@ -24,9 +24,9 @@ def get_first_unboxify_product_url(product_name):
                 first_product_url = first_product_url_element['href']
                 return f"https://www.unboxify.in{first_product_url}"
 
-        print("No product found.")
+        print("No product found on Unboxify.")
         return None
 
     else:
-        print(f"Error: {response.status_code}")
+        print(f"Error: {response.status_code} from Unboxify")
         return None

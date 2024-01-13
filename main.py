@@ -1,52 +1,8 @@
-import requests
-from bs4 import BeautifulSoup
-from flipkart_product_url import get_first_flipkart_product_url
-from unboxify_product_url import get_first_unboxify_product_url
+from scraping_logic.scrape import scrape_amazon_product_details, scrape_unboxify_product_details, scrape_flipkart_product_details
+from search_product_url.flipkart_product_url import get_first_flipkart_product_url
+from search_product_url.unboxify_product_url import get_first_unboxify_product_url
+from line_profiler_pycharm import profile
 import csv
-
-
-def scrape_flipkart_product_details(url):
-    headers = {
-        'User-Agent': 'Your User Agent Here',
-    }
-
-    response = requests.get(url, headers=headers)
-
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.content, 'html.parser')
-
-        title = soup.find('span', {'class': 'B_NuCI'}).get_text(strip=True)
-        price = soup.find('div', {'class': '_30jeq3 _16Jk6d'}).get_text(strip=True)
-
-        # This selector might need adjustment based on the Amazon page structure
-        # description = soup.find('div', {'id': 'productDescription'}).get_text(strip=True)
-
-        return {'title': title, 'price': price}
-    else:
-        print(f"Error: {response.status_code}")
-        return None
-
-
-def scrape_unboxify_product_details(url):
-    headers = {
-        'User-Agent': 'Your User Agent Here',
-    }
-
-    response = requests.get(url, headers=headers)
-
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.content, 'html.parser')
-
-        title = soup.find('h2', {'class': 'm5'}).get_text(strip=True)
-        price = soup.find('h3', {'class': 'f8pr-price s1pr price'}).get_text(strip=True)
-
-        # This selector might need adjustment based on the Amazon page structure
-        # description = soup.find('div', {'id': 'productDescription'}).get_text(strip=True)
-
-        return {'title': title, 'price': price}
-    else:
-        print(f"Error: {response.status_code}")
-        return None
 
 
 def read_names_from_file(file_path):
@@ -55,13 +11,16 @@ def read_names_from_file(file_path):
     return product_names
 
 
+@profile
 def main():
-    flipkart_file_path = 'flipkart.txt'
-    unboxify_file_path = 'unboxify.txt'
+    flipkart_file_path = 'enter_names/flipkart.txt'
+    unboxify_file_path = 'enter_names/unboxify.txt'
+    amazon_file_path = 'enter_names/amazon.txt'
     csv_file_path = 'product_details.csv'
 
     flipkart_product_names = read_names_from_file(flipkart_file_path)
     unboxify_product_names = read_names_from_file(unboxify_file_path)
+    amazon_product_urls = read_names_from_file(amazon_file_path)
 
     all_product_details = []
 
@@ -69,15 +28,26 @@ def main():
         flipkart_url = get_first_flipkart_product_url(product_name)
         if flipkart_url:
             product_details = scrape_flipkart_product_details(flipkart_url)
+            # sleep(10)
             if product_details:
                 all_product_details.append(product_details)
+            # sleep(10)
 
     for product_name in unboxify_product_names:
         unboxify_url = get_first_unboxify_product_url(product_name)
         if unboxify_url:
             product_details = scrape_unboxify_product_details(unboxify_url)
+            # sleep(10)
             if product_details:
                 all_product_details.append(product_details)
+
+    for amazon_url in amazon_product_urls:
+        if amazon_url:
+            product_details = scrape_amazon_product_details(amazon_url)
+            # sleep(10)
+            if product_details:
+                all_product_details.append(product_details)
+            # sleep(10)
 
     with open(csv_file_path, 'w', newline='', encoding='utf-8') as csvfile:
         fieldnames = ['title', 'price']

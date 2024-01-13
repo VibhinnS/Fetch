@@ -20,8 +20,8 @@ def get_first_flipkart_product_url(product_name):
             first_product_url = first_product_url_element['href']
             return f"https://www.flipkart.com{first_product_url}"
         else:
-            print("No product found.")
+            print("No product found in Flipkart.")
             return None
     else:
-        print(f"Error: {response.status_code}")
+        print(f"Error: {response.status_code} from Flipkart")
         return None
