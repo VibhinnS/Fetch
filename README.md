@@ -17,7 +17,7 @@ From a terminal
 2. Add a Virtual Environment `python3 -m venv .venv` (Optional)
 3. Activate the Virtual Environment `source .venv/bin/activate` (Optional) 
 4. Install Requirements `pip3 install -r requirements.txt`
-5. Rum python3 main.py
+5. Rum python3 `main.py`
 
 ## Example Output - 'product_details.csv'
 ### Product Details
