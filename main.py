@@ -1,7 +1,6 @@
 from scraping_logic.scrape import scrape_amazon_product_details, scrape_unboxify_product_details, scrape_flipkart_product_details
 from search_product_url.flipkart_product_url import get_first_flipkart_product_url
 from search_product_url.unboxify_product_url import get_first_unboxify_product_url
-from line_profiler_pycharm import profile
 import csv
 import os
 
@@ -12,7 +11,6 @@ def read_names_from_file(file_path):
     return product_names
 
 
-@profile
 def main():
     flipkart_file_path = 'enter_names/flipkart.txt'
     unboxify_file_path = 'enter_names/unboxify.txt'
