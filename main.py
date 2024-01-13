@@ -27,30 +27,30 @@ def main():
     for product_name in flipkart_product_names:
         flipkart_url = get_first_flipkart_product_url(product_name)
         if flipkart_url:
-            product_details = scrape_flipkart_product_details(flipkart_url)
-            # sleep(10)
+            product_details = scrape_flipkart_product_details(flipkart_url, product_name)
+            # sleep(15)
             if product_details:
                 all_product_details.append(product_details)
-            # sleep(10)
+            # sleep(15)
 
     for product_name in unboxify_product_names:
         unboxify_url = get_first_unboxify_product_url(product_name)
         if unboxify_url:
-            product_details = scrape_unboxify_product_details(unboxify_url)
-            # sleep(10)
+            product_details = scrape_unboxify_product_details(unboxify_url, product_name)
+            # sleep(15)
             if product_details:
                 all_product_details.append(product_details)
 
     for amazon_url in amazon_product_urls:
         if amazon_url:
             product_details = scrape_amazon_product_details(amazon_url)
-            # sleep(10)
+            # sleep(15)
             if product_details:
                 all_product_details.append(product_details)
-            # sleep(10)
+            # sleep(15)
 
     with open(csv_file_path, 'w', newline='', encoding='utf-8') as csvfile:
-        fieldnames = ['title', 'price']
+        fieldnames = ['Vendor', 'title', 'price']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(all_product_details)

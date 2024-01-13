@@ -3,52 +3,56 @@ from bs4 import BeautifulSoup
 from time import sleep
 
 
-def scrape_flipkart_product_details(url):
+def scrape_flipkart_product_details(url, product_name):
     headers = {
         'User-Agent': 'Your-User-Agent'
     }
-    sleep(10)
+    sleep(15)
     response = requests.get(url, headers=headers)
     print("Flipkart Response Accepted")
-    sleep(10)
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
-        sleep(10)
+        sleep(15)
         title = soup.find('span', {'class': 'B_NuCI'}).get_text(strip=True)
         price = soup.find('div', {'class': '_30jeq3 _16Jk6d'}).get_text(strip=True)
 
         # This selector might need adjustment based on the Amazon page structure
         # description = soup.find('div', {'id': 'productDescription'}).get_text(strip=True)
         print("Flipkart product completed successfully")
-        sleep(10)
-        return {'title': title, 'price': price}
+        return {
+            'Vendor': 'Flipkart',
+            'title': title,
+            'price': price
+        }
     else:
-        print(f"Error: {response.status_code} from Flipkart scraping")
+        print(f"Error: {response.status_code} from Flipkart scraping {product_name}")
         return None
 
 
-def scrape_unboxify_product_details(url):
+def scrape_unboxify_product_details(url, product_name):
     headers = {
         'User-Agent': 'Your-User-Agent'
     }
-    sleep(10)
+    sleep(15)
     response = requests.get(url, headers=headers)
-    sleep(10)
     print("Unboxify Request Accepted")
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
-        sleep(10)
+        sleep(15)
         title = soup.find('h2', {'class': 'm5'}).get_text(strip=True)
         price = soup.find('h3', {'class': 'f8pr-price s1pr price'}).get_text(strip=True)
 
         # This selector might need adjustment based on the Amazon page structure
         # description = soup.find('div', {'id': 'productDescription'}).get_text(strip=True)
         print("Unboxify product completed successfully")
-        sleep(10)
-        return {'title': title, 'price': price}
+        return {
+            'Vendor': 'Unboxify',
+            'title': title,
+            'price': price
+        }
     else:
-        print(f"Error: {response.status_code} from Unboxify Scraping")
+        print(f"Error: {response.status_code} from Unboxify Scraping {product_name}")
         return None
 
 
@@ -56,7 +60,6 @@ def scrape_unboxify_product_details(url):
 
 
 def scrape_amazon_product_details(url):
-    # e = Extractor.from_yaml_file('selector.yml')
     headers = {
         'dnt': '1',
         'upgrade-insecure-requests': '1',
@@ -70,27 +73,32 @@ def scrape_amazon_product_details(url):
         'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
     }
 
-    sleep(10)
+    sleep(15)
     response = requests.get(url, headers=headers)
-    sleep(10)
+    sleep(15)
     print("Amazon request accepted")
 
     if response.status_code > 500:
         if "To discuss automated access to Amazon data please contact" in response.text:
-            print("Page %s was blocked by Amazon. Please try using better proxies\n", url)
+            print(f"Page %s was blocked by Amazon. Please try using better proxies\n", url)
         else:
-            print("Page %s must have been blocked by Amazon as the status code was %d" % (url, response.status_code))
+            print(f"Page %s must have been blocked by Amazon as the status code was %d" % (url, response.status_code))
         return None
-    # Pass the HTML of the page and create
-    soup = BeautifulSoup(response.text, 'html.parser')
-    sleep(10)
 
-    title = soup.find('span', {'id': 'productTitle'}).prettify()
-    price = soup.find('span', {'class': 'a-price-whole'}).prettify()
-    print("Amazon products added successfully")
-    sleep(10)
-    return {
-        'title': title,
-        'price': price
-    }
+    try:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        sleep(15)
+
+        title = soup.find('span', {'id': 'productTitle'}).get_text(strip=True)
+        price = soup.find('span', {'class': 'a-price-whole'}).get_text(strip=True)
+        print("Amazon products added successfully")
+
+        return {
+            'Vendor': 'Amazon',
+            'title': title,
+            'price': price
+        }
+    except Exception as e:
+        print(f"Error while scraping Amazon product details from {url}: {str(e)}")
+        return None
 
