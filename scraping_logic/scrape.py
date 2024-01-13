@@ -7,13 +7,13 @@ def scrape_flipkart_product_details(url, product_name):
     headers = {
         'User-Agent': 'Your-User-Agent'
     }
-    sleep(15)
+    sleep(12)
     response = requests.get(url, headers=headers)
     print("Flipkart Response Accepted")
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
-        sleep(15)
+        sleep(12)
         title = soup.find('span', {'class': 'B_NuCI'}).get_text(strip=True)
         price = soup.find('div', {'class': '_30jeq3 _16Jk6d'}).get_text(strip=True)
 
@@ -34,12 +34,12 @@ def scrape_unboxify_product_details(url, product_name):
     headers = {
         'User-Agent': 'Your-User-Agent'
     }
-    sleep(15)
+    sleep(12)
     response = requests.get(url, headers=headers)
     print("Unboxify Request Accepted")
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
-        sleep(15)
+        sleep(12)
         title = soup.find('h2', {'class': 'm5'}).get_text(strip=True)
         price = soup.find('h3', {'class': 'f8pr-price s1pr price'}).get_text(strip=True)
 
@@ -73,9 +73,8 @@ def scrape_amazon_product_details(url):
         'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
     }
 
-    sleep(15)
+    sleep(12)
     response = requests.get(url, headers=headers)
-    sleep(15)
     print("Amazon request accepted")
 
     if response.status_code > 500:
@@ -87,7 +86,7 @@ def scrape_amazon_product_details(url):
 
     try:
         soup = BeautifulSoup(response.text, 'html.parser')
-        sleep(15)
+        sleep(12)
 
         title = soup.find('span', {'id': 'productTitle'}).get_text(strip=True)
         price = soup.find('span', {'class': 'a-price-whole'}).get_text(strip=True)

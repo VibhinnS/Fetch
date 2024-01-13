@@ -3,6 +3,7 @@ from search_product_url.flipkart_product_url import get_first_flipkart_product_u
 from search_product_url.unboxify_product_url import get_first_unboxify_product_url
 from line_profiler_pycharm import profile
 import csv
+import os
 
 
 def read_names_from_file(file_path):
@@ -28,31 +29,33 @@ def main():
         flipkart_url = get_first_flipkart_product_url(product_name)
         if flipkart_url:
             product_details = scrape_flipkart_product_details(flipkart_url, product_name)
-            # sleep(15)
+            # sleep(10)
             if product_details:
                 all_product_details.append(product_details)
-            # sleep(15)
+            # sleep(10)
 
     for product_name in unboxify_product_names:
         unboxify_url = get_first_unboxify_product_url(product_name)
         if unboxify_url:
             product_details = scrape_unboxify_product_details(unboxify_url, product_name)
-            # sleep(15)
+            # sleep(10)
             if product_details:
                 all_product_details.append(product_details)
 
     for amazon_url in amazon_product_urls:
         if amazon_url:
             product_details = scrape_amazon_product_details(amazon_url)
-            # sleep(15)
+            # sleep(10)
             if product_details:
                 all_product_details.append(product_details)
-            # sleep(15)
+            # sleep(10)
 
+    file_exists = os.path.isfile(csv_file_path)
     with open(csv_file_path, 'w', newline='', encoding='utf-8') as csvfile:
         fieldnames = ['Vendor', 'title', 'price']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
+        if not file_exists:
+            writer.writeheader()
         writer.writerows(all_product_details)
 
     print(f"Results saved to {csv_file_path}")

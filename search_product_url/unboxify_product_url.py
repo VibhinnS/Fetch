@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from time import sleep
 
 
 def get_first_unboxify_product_url(product_name):
@@ -9,10 +10,10 @@ def get_first_unboxify_product_url(product_name):
 
     unboxify_url = f"https://www.unboxify.in/search?q={product_name}"
     response = requests.get(unboxify_url, headers=headers)
-
+    sleep(12)
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
-
+        sleep(12)
         # Find the first figure tag
         first_figure_tag = soup.find('figure')
 

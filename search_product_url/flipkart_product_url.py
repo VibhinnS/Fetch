@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from time import sleep
 
 
 def get_first_flipkart_product_url(product_name):
@@ -9,10 +10,10 @@ def get_first_flipkart_product_url(product_name):
 
     flipkart_url = f"https://www.flipkart.com/search?q={product_name}"
     response = requests.get(flipkart_url, headers=headers)
-
+    sleep(12)
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
-
+        sleep(12)
         # Find the first product URL
         first_product_url_element = soup.find('a', {'class': '_1fQZEK'})
 
